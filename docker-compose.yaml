@@ -15,19 +15,18 @@ services:
     build:
       context: ./quasar-project
       dockerfile: Dockerfile
+    ports:
+      - '8080:80'
     networks:
       - app-network
 
   nginx:
-    image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
+    image: nginx:alpine
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
-    volumes:
-      - ./quasar-project/nginx/data:/data
-      - ./quasar-project/letsencrypt:/etc/letsencrypt
+      - 80:80
+    depends_on:
+      - web
     networks:
       - app-network
 

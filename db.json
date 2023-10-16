@@ -72,6 +72,13 @@
       "tipo": "Saída",
       "valor": -500,
       "id": 7
+    },
+    {
+      "categoria_id": 1,
+      "cliente_id": 1,
+      "tipo": "Entrada",
+      "valor": 35,
+      "id": 8
     }
   ]
 }

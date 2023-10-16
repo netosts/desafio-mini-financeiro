@@ -7,8 +7,8 @@
             <div class="text-h6">Categoria</div>
             <q-select
               dense
-              v-model="promptValues.label"
-              :options="manager.categories"
+              v-model="promptValues.categoria"
+              :options="categoriesStore.options"
               autofocus
               lazy-rules
               :rules="[
@@ -24,7 +24,7 @@
             <q-select
               dense
               v-model="promptValues.cliente"
-              :options="manager.clients"
+              :options="clientsStore.options"
               autofocus
               lazy-rules
               :rules="[
@@ -35,11 +35,11 @@
           </q-card-section>
 
           <q-card-section>
-            <div class="text-h6">{{ promptValues.text }}</div>
+            <div class="text-h6">{{ promptValues.tipo }}</div>
             <q-input
               dense
               type="number"
-              v-model.number="promptValues.value"
+              v-model.number="promptValues.valor"
               autofocus
               lazy-rules
               :rules="[
@@ -52,7 +52,7 @@
             <q-btn flat label="Cancelar" type="button" v-close-popup />
             <q-btn
               flat
-              :label="`Adicionar ${promptValues.text}`"
+              :label="`Adicionar ${promptValues.tipo}`"
               type="submit"
             />
           </q-card-actions>
@@ -60,8 +60,7 @@
       </q-card>
     </q-dialog>
     <q-input
-      square
-      outlined
+      flat
       v-model="inputFilter"
       @update:model-value="manager.findRecords(inputFilter)"
       label="Pesquisar por Cliente"
@@ -75,21 +74,21 @@
           </q-item-section>
         </q-item>
         <q-item
-          v-for="(item, id) in manager.categories"
+          v-for="(item, id) in categoriesStore.categories"
           :key="id"
           clickable
           v-close-popup
-          @click="manager.filterRecords(item)"
+          @click="manager.filterRecords(item.id)"
         >
           <q-item-section>
-            <q-item-label>{{ item }}</q-item-label>
+            <q-item-label>{{ item.label }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
     </q-btn-dropdown>
     <q-table
       title="Entradas e Saídas"
-      :rows="rows"
+      :rows="manager.rows"
       :columns="columns"
       row-key="name"
     />
@@ -124,78 +123,87 @@
 
 <script setup lang="ts">
 import { useManager } from 'src/stores/manager';
+import { useCategories } from 'src/stores/categories';
+import { useClients } from 'src/stores/clients';
 import { computed, onMounted, ref, reactive } from 'vue';
-import { Record } from 'stores/manager';
 
 onMounted(() => {
   manager.init();
 });
 
-interface PromptValues {
-  text: string | undefined;
-  label: string | undefined;
+export interface PromptValues {
+  tipo: string | undefined;
+  categoria: string | undefined;
   cliente: string | undefined;
-  value: number | undefined;
+  valor: number | undefined;
 }
 
 const addValueButton = ref<boolean | undefined>(false);
 const prompt = ref<boolean | undefined>(false);
 const promptValues = reactive<PromptValues>({
-  text: undefined,
-  label: undefined,
+  tipo: undefined,
+  categoria: undefined,
   cliente: undefined,
-  value: undefined,
+  valor: undefined,
 });
 
 const inputFilter = ref('');
 
 const manager = useManager();
+const categoriesStore = useCategories();
+const clientsStore = useClients();
 const total = computed(() => manager.total);
-const rows = computed<object[]>(() => manager.records);
 
 const columns = [
   {
-    name: 'label',
+    name: 'categoria',
     label: 'Categoria',
-    field: 'label',
+    field: 'categoria',
     sortable: true,
-    align: 'center',
+    align: 'left',
   },
   {
     name: 'cliente',
     label: 'Cliente',
     field: 'cliente',
     sortable: true,
-    align: 'center',
+    align: 'left',
   },
   {
-    name: 'value',
-    label: 'Valor',
-    field: 'value',
+    name: 'tipo',
+    label: 'Tipo',
+    field: 'tipo',
     sortable: true,
-    align: 'center',
+    align: 'left',
+  },
+  {
+    name: 'valor',
+    label: 'Valor',
+    field: 'valor',
+    sortable: true,
+    align: 'left',
   },
 ];
 
 async function onSubmit() {
   prompt.value = false;
-  if (promptValues.text === 'Saída' && promptValues.value !== undefined) {
-    promptValues.value = promptValues.value * -1;
+  if (promptValues.tipo === 'Saída' && promptValues.valor !== undefined) {
+    promptValues.valor = promptValues.valor * -1;
   }
-  delete promptValues.text;
-  await manager.addRecord(promptValues as Record);
-  promptValues.label = undefined;
+  await manager.addRecord(promptValues as PromptValues);
+  promptValues.tipo = undefined;
+  promptValues.categoria = undefined;
   promptValues.cliente = undefined;
-  promptValues.value = undefined;
+  promptValues.valor = undefined;
 }
 
 function promptEntry() {
-  promptValues.text = 'Entrada';
+  promptValues.tipo = 'Entrada';
   prompt.value = true;
 }
 
 function promptExit() {
-  promptValues.text = 'Saída';
+  promptValues.tipo = 'Saída';
   prompt.value = true;
 }
 </script>

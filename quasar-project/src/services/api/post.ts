@@ -1,10 +1,7 @@
 import { api } from 'boot/axios';
+import { Record } from 'src/stores/manager';
 
-interface PostRecord {
-  value: number;
-}
-
-export async function postRecord(value: PostRecord) {
+export async function postRecord(value: Record) {
   try {
     const response = await api.post('/valores/', value);
     console.log(`${value} was successfully added`);

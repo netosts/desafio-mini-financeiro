@@ -25,22 +25,28 @@
   ],
   "valores": [
     {
-      "label": "SERVIÇO",
-      "cliente": "Maria",
-      "value": 20,
+      "label": "CASA",
+      "cliente": "Jose",
+      "value": 35,
       "id": 1
     },
     {
-      "label": "SERVIÇO",
-      "cliente": "Maria",
-      "value": 20,
+      "label": "CASA",
+      "cliente": "Jose",
+      "value": 5345,
       "id": 2
     },
     {
       "label": "SERVIÇO",
       "cliente": "Maria",
-      "value": 20,
+      "value": -142,
       "id": 3
+    },
+    {
+      "label": "INTERNET",
+      "cliente": "Maria",
+      "value": -2000,
+      "id": 4
     }
   ]
 }

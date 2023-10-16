@@ -178,12 +178,15 @@ const columns = [
 ];
 
 async function onSubmit() {
+  prompt.value = false;
   if (promptValues.text === 'Saída' && promptValues.value !== undefined) {
     promptValues.value = promptValues.value * -1;
   }
   delete promptValues.text;
   await manager.addRecord(promptValues as Record);
-  prompt.value = false;
+  promptValues.label = undefined;
+  promptValues.cliente = undefined;
+  promptValues.value = undefined;
 }
 
 function promptEntry() {

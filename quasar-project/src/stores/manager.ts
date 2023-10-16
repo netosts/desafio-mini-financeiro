@@ -37,6 +37,9 @@ export const useManager = defineStore({
     records: [] as Record[],
     categories: [] as string[],
     clients: [] as string[],
+    defaultRecords: [] as Record[],
+    categoryFilter: 'All' as string,
+    clientFilter: '' as string,
   }),
   getters: {
     total(): number {
@@ -53,28 +56,50 @@ export const useManager = defineStore({
     },
     async addRecord(inputValue: Record) {
       const response = await postRecord(inputValue);
-      return response as Record;
+      this.records.push(response);
     },
     async filterRecords(filter: string) {
-      const defaultRecords = await getValores();
-      if (filter === 'All') {
-        this.records = defaultRecords;
-        return;
+      this.categoryFilter = filter;
+      if (this.defaultRecords.length === 0) {
+        this.defaultRecords = await getValores();
       }
-      const filteredRecords = defaultRecords.filter(
-        (record: Record) => record.label === filter
-      );
+
+      const filteredRecords = this.defaultRecords.filter((record: Record) => {
+        if (
+          record.label === filter &&
+          (this.clientFilter === '' ||
+            record.cliente
+              .toLowerCase()
+              .includes(this.clientFilter.toLowerCase()))
+        ) {
+          return record;
+        } else if (
+          filter === 'All' &&
+          (this.clientFilter === '' ||
+            record.cliente
+              .toLowerCase()
+              .includes(this.clientFilter.toLowerCase()))
+        ) {
+          return record;
+        }
+      });
       this.records = filteredRecords;
     },
     async findRecords(filter: string) {
-      const defaultRecords = await getValores();
-      if (filter === '') {
-        this.records = defaultRecords;
-        return;
+      this.clientFilter = filter;
+      if (this.defaultRecords.length === 0) {
+        this.defaultRecords = await getValores();
       }
-      const recordsFound = defaultRecords.filter((item: Record) =>
-        item.cliente.toLowerCase().includes(filter.toLowerCase())
-      );
+
+      const recordsFound = this.defaultRecords.filter((record: Record) => {
+        if (
+          record.cliente.toLowerCase().includes(filter.toLowerCase()) &&
+          (this.categoryFilter === 'All' ||
+            record.label === this.categoryFilter)
+        ) {
+          return record;
+        }
+      });
       this.records = recordsFound;
     },
   },

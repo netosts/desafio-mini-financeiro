@@ -1,0 +1,46 @@
+{
+  "categorias": [
+    {
+      "id": 1,
+      "label": "CASA"
+    },
+    {
+      "id": 2,
+      "label": "INTERNET"
+    },
+    {
+      "id": 3,
+      "label": "SERVIÇO"
+    }
+  ],
+  "clientes": [
+    {
+      "id": 1,
+      "cliente": "Jose"
+    },
+    {
+      "id": 2,
+      "cliente": "Maria"
+    }
+  ],
+  "valores": [
+    {
+      "label": "SERVIÇO",
+      "cliente": "Maria",
+      "value": 20,
+      "id": 1
+    },
+    {
+      "label": "SERVIÇO",
+      "cliente": "Maria",
+      "value": 20,
+      "id": 2
+    },
+    {
+      "label": "SERVIÇO",
+      "cliente": "Maria",
+      "value": 20,
+      "id": 3
+    }
+  ]
+}

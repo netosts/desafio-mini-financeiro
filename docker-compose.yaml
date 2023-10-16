@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+  server:
+    image: clue/json-server
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./db.json:/data/db.json
+    networks:
+      - app-network
+
+  web:
+    restart: unless-stopped
+    build:
+      context: ./quasar-project
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./quasar-project/nginx/data:/data
+      - ./quasar-project/letsencrypt:/etc/letsencrypt
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

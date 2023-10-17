@@ -89,7 +89,6 @@
 
     <q-table
       style="height: 400px; padding: 5px"
-      flat
       title="Entradas e Saídas"
       :rows="manager.rows"
       :columns="columns"
@@ -140,7 +139,7 @@
         label-position="right"
         color="primary"
         icon="keyboard_arrow_left"
-        direction="left"
+        :direction="$q.screen.lt.sm ? 'up' : 'left'"
       >
         <q-fab-action
           color="light-blue-4"
@@ -225,27 +224,29 @@ const columns = [
 ];
 
 async function onSubmit() {
-  prompt.value = false;
-  if (
-    promptValues.valor !== undefined &&
-    typeof promptValues.valor === 'string'
-  ) {
-    promptValues.valor = parseFloat(promptValues.valor);
+  try {
+    prompt.value = false;
+    if (promptValues.tipo === 'saida' && promptValues.valor !== undefined) {
+      promptValues.valor = promptValues.valor * -1;
+    }
+    await manager.addRecord(promptValues as PromptValues);
+    promptValues.tipo = undefined;
+    promptValues.categoria = undefined;
+    promptValues.cliente = undefined;
+    promptValues.valor = undefined;
+  } catch (err) {
+    alert('Algo deu errado! Não foi possível adicionar o valor.');
+    console.error(err);
   }
-  await manager.addRecord(promptValues as PromptValues);
-  promptValues.tipo = undefined;
-  promptValues.categoria = undefined;
-  promptValues.cliente = undefined;
-  promptValues.valor = undefined;
 }
 
 function promptEntry() {
-  promptValues.tipo = 'Entrada';
+  promptValues.tipo = 'entrada';
   prompt.value = true;
 }
 
 function promptExit() {
-  promptValues.tipo = 'Saída';
+  promptValues.tipo = 'saida';
   prompt.value = true;
 }
 </script>

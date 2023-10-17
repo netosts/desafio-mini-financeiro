@@ -29,6 +29,12 @@ export function createRows(records: Record[]): IndexRows[] {
     const translatedClient = clientsStore.clients.find(
       (item) => item.id === record.cliente_id
     );
+
+    if (record.valor) {
+      if (record.valor < 0) {
+        record.valor = record.valor * -1;
+      }
+    }
     return {
       categoria: translatedCategory ? translatedCategory.label : null,
       cliente: translatedClient ? translatedClient.cliente : null,
@@ -93,10 +99,10 @@ export function sumTotal(records: Record[]): string {
   return records
     .reduce((sumTotal, record) => {
       if (record.valor) {
-        if (record.tipo === 'Entrada') {
-          return sumTotal + record.valor;
-        } else if (record.tipo === 'Saída') {
+        if (record.tipo === 'saida') {
           return sumTotal - record.valor;
+        } else {
+          return sumTotal + record.valor;
         }
       }
       return sumTotal;

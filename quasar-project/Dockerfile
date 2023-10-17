@@ -19,7 +19,7 @@ RUN npm run build:pwa
 FROM nginx:stable-alpine as production-stage
 
 # copy the build application from the previous state to the nginx container
-COPY --from=build-stage /app/dist/spa /usr/share/nginx/html
+COPY --from=build-stage /app/dist/pwa /usr/share/nginx/html
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 

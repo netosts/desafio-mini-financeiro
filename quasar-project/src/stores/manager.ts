@@ -8,6 +8,8 @@ import {
   createRows,
   filterByCategory,
   filterByName,
+  sumTotal,
+  sumTypes,
 } from 'src/services/manager/helpers';
 import { PromptValues } from 'src/pages/IndexPage.vue';
 
@@ -22,7 +24,7 @@ export interface IndexRows {
   categoria: string | null;
   cliente: string | null;
   tipo: string | null;
-  valor: number | null;
+  valor: string | null;
 }
 
 const categoriesStore = useCategories();
@@ -38,13 +40,14 @@ export const useManager = defineStore({
     rows(): IndexRows[] {
       return createRows(this.records);
     },
-    total(): number {
-      return this.records.reduce((sumTotal, record) => {
-        if (record.valor) {
-          return sumTotal + record.valor;
-        }
-        return 0;
-      }, 0);
+    total(): string {
+      return sumTotal(this.records);
+    },
+    entries(): string {
+      return sumTypes(this.records, 'Entrada');
+    },
+    expenses(): string {
+      return sumTypes(this.records, 'Saída');
     },
   },
   actions: {

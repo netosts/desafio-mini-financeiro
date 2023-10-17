@@ -28,57 +28,43 @@
       "categoria_id": 1,
       "cliente_id": 1,
       "tipo": "Entrada",
-      "valor": 23,
+      "valor": 100,
       "id": 1
     },
     {
-      "categoria_id": 2,
-      "cliente_id": 1,
+      "categoria_id": 1,
+      "cliente_id": 2,
       "tipo": "Saída",
-      "valor": -10,
+      "valor": 20,
       "id": 2
     },
     {
       "categoria_id": 3,
-      "cliente_id": 1,
+      "cliente_id": 2,
       "tipo": "Entrada",
-      "valor": 500,
+      "valor": 376.87,
       "id": 3
     },
     {
       "categoria_id": 2,
       "cliente_id": 1,
-      "tipo": "Entrada",
-      "valor": 3,
+      "tipo": "Saída",
+      "valor": 209.99,
       "id": 4
     },
     {
-      "categoria_id": 1,
-      "cliente_id": 2,
+      "categoria_id": 3,
+      "cliente_id": 1,
       "tipo": "Entrada",
-      "valor": 300,
+      "valor": 169.23435,
       "id": 5
     },
     {
       "categoria_id": 2,
       "cliente_id": 2,
       "tipo": "Saída",
-      "valor": -90,
+      "valor": 223.23,
       "id": 6
-    },
-    {
-      "categoria_id": 3,
-      "cliente_id": 2,
-      "tipo": "Saída",
-      "valor": -500,
-      "id": 7
-    },
-    {
-      "categoria_id": 1,
-      "cliente_id": 1,
-      "tipo": "Entrada",
-      "valor": 35,
-      "id": 8
     }
   ]
 }

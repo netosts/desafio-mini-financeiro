@@ -33,7 +33,7 @@ export function createRows(records: Record[]): IndexRows[] {
       categoria: translatedCategory ? translatedCategory.label : null,
       cliente: translatedClient ? translatedClient.cliente : null,
       tipo: record.tipo ? record.tipo : null,
-      valor: record.valor ? record.valor : null,
+      valor: record.valor ? `R$${record.valor.toFixed(2)}` : null,
     };
   });
   return transformedRows;
@@ -87,4 +87,31 @@ export async function filterByName(filter: string, defaultRecords: Record[]) {
     }
   });
   return filteredRecords;
+}
+
+export function sumTotal(records: Record[]): string {
+  return records
+    .reduce((sumTotal, record) => {
+      if (record.valor) {
+        if (record.tipo === 'Entrada') {
+          return sumTotal + record.valor;
+        } else if (record.tipo === 'Saída') {
+          return sumTotal - record.valor;
+        }
+      }
+      return sumTotal;
+    }, 0)
+    .toFixed(2);
+}
+export function sumTypes(records: Record[], type: string): string {
+  return records
+    .reduce((sumTotal, record) => {
+      if (record.valor) {
+        if (record.tipo === type) {
+          return sumTotal + record.valor;
+        }
+      }
+      return sumTotal;
+    }, 0)
+    .toFixed(2);
 }

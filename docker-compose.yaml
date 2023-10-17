@@ -1,0 +1,35 @@
+version: "3.2"
+services:
+  server:
+    image: clue/json-server
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./db.json:/data/db.json
+    networks:
+      - app-network
+
+  web:
+    restart: unless-stopped
+    build:
+      context: ./quasar-project
+      dockerfile: Dockerfile
+    ports:
+      - '8080:80'
+    networks:
+      - app-network
+
+  nginx:
+    restart: unless-stopped
+    image: nginx:alpine
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

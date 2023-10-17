@@ -1,0 +1,70 @@
+{
+  "categorias": [
+    {
+      "id": 1,
+      "label": "CASA"
+    },
+    {
+      "id": 2,
+      "label": "INTERNET"
+    },
+    {
+      "id": 3,
+      "label": "SERVIÇO"
+    }
+  ],
+  "clientes": [
+    {
+      "id": 1,
+      "cliente": "Jose"
+    },
+    {
+      "id": 2,
+      "cliente": "Maria"
+    }
+  ],
+  "valores": [
+    {
+      "categoria_id": 1,
+      "cliente_id": 1,
+      "tipo": "Entrada",
+      "valor": 100,
+      "id": 1
+    },
+    {
+      "categoria_id": 1,
+      "cliente_id": 2,
+      "tipo": "Saída",
+      "valor": 20,
+      "id": 2
+    },
+    {
+      "categoria_id": 3,
+      "cliente_id": 2,
+      "tipo": "Entrada",
+      "valor": 376.87,
+      "id": 3
+    },
+    {
+      "categoria_id": 2,
+      "cliente_id": 1,
+      "tipo": "Saída",
+      "valor": 209.99,
+      "id": 4
+    },
+    {
+      "categoria_id": 3,
+      "cliente_id": 1,
+      "tipo": "Entrada",
+      "valor": 169.23435,
+      "id": 5
+    },
+    {
+      "categoria_id": 2,
+      "cliente_id": 2,
+      "tipo": "Saída",
+      "valor": 223.23,
+      "id": 6
+    }
+  ]
+}

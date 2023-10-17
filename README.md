@@ -45,3 +45,19 @@ json-server -w db.json
     { "id": 2, "cliente": "Maria" }
   ]
 }
+
+// sugestão
+[
+  {
+    "categoria_id": 1,
+    "cliente_id": 2,
+    "tipo": "entrada",
+    "valor": 10
+  },
+  {
+    "categoria_id": 1,
+    "cliente_id": 2,
+    "tipo": "saida",
+    "valor": -5.0
+  }
+]

@@ -44,10 +44,10 @@ export const useManager = defineStore({
       return sumTotal(this.records);
     },
     entries(): string {
-      return sumTypes(this.records, 'Entrada');
+      return sumTypes(this.records, 'entrada');
     },
     expenses(): string {
-      return sumTypes(this.records, 'Saída');
+      return sumTypes(this.records, 'saida');
     },
   },
   actions: {

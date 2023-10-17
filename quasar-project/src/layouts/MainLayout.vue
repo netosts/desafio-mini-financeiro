@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated class="bg-black">
+    <q-header elevated class="bg-primary">
       <q-toolbar>
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>Mini Financeiro</q-toolbar-title>
@@ -21,10 +21,10 @@
         <q-list padding>
           <q-item clickable v-ripple>
             <q-item-section avatar>
-              <q-icon name="dashboard" />
+              <q-icon name="dashboard" color="primary" />
             </q-item-section>
 
-            <q-item-section> Dashboard </q-item-section>
+            <q-item-section class="text-primary"> Dashboard </q-item-section>
           </q-item>
         </q-list>
       </q-scroll-area>

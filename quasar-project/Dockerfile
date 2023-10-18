@@ -1,30 +1,22 @@
-FROM node:16-alpine3.17 as build-stage
+FROM node:lts-alpine
 
-# Set the working directory
+# install simple http server for serving static content
+RUN npm install -g http-server
+
+# make the 'app' folder the current working directory
 WORKDIR /app
 
-# Copy the working directory in the container
+# copy both 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
 
-# install the project dependencies
+# install project dependencies
 RUN npm install
 
-# copy the rest of the project files to the container
+# copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
-# build the vue.js application to the production mode to dist folder
+# build app for production with minification
 RUN npm run build:pwa
 
-# use the lightweght Nginx image from the previous state to the nginx container
-FROM nginx:stable-alpine as production-stage
-
-# copy the build application from the previous state to the nginx container
-COPY --from=build-stage /app/dist/pwa /usr/share/nginx/html
-
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-
-# expose the port 80
-EXPOSE 80
-
-# start nginx to serve app
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 8080
+CMD [ "http-server", "dist/pwa" ]

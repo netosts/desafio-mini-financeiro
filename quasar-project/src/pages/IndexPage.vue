@@ -4,11 +4,15 @@
       <q-card style="min-width: 350px">
         <q-form @submit="onSubmit">
           <q-card-section>
-            <div class="text-h6">Categoria</div>
+            <h3 class="add-dialog--title">
+              Adicionar
+              {{ promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída' }}
+            </h3>
             <q-select
-              dense
+              flat
               v-model="promptValues.categoria"
               :options="categoriesStore.options"
+              label="Categoria"
               autofocus
               lazy-rules
               :rules="[
@@ -17,14 +21,11 @@
                   'Por favor, selecione uma categoria',
               ]"
             />
-          </q-card-section>
 
-          <q-card-section>
-            <div class="text-h6">Cliente</div>
             <q-select
-              dense
               v-model="promptValues.cliente"
               :options="clientsStore.options"
+              label="Cliente"
               autofocus
               lazy-rules
               :rules="[
@@ -32,16 +33,11 @@
                   (val && val.length > 0) || 'Por favor, selecione um cliente',
               ]"
             />
-          </q-card-section>
 
-          <q-card-section>
-            <div class="text-h6">
-              {{ promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída' }}
-            </div>
             <q-input
-              dense
               type="number"
               v-model.number="promptValues.valor"
+              :label="promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída'"
               autofocus
               lazy-rules
               step="any"
@@ -130,7 +126,7 @@
       <template v-slot:body="props">
         <q-tr :props="props" class="cursor-pointer">
           <q-popup-edit
-            :cover="false"
+            :cover="$q.screen.lt.sm ? true : false"
             anchor="center middle"
             v-model="props.row"
             @save="manager.updateRecord"
@@ -335,12 +331,23 @@ function promptExit() {
 </script>
 
 <style lang="scss" scoped>
+.add-dialog {
+  &--title {
+    margin: 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(64, 64, 64);
+  }
+}
 .popup-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
   span {
+    text-align: center;
     font-size: 18px;
     font-weight: 500;
     color: rgb(64, 64, 64);
@@ -349,6 +356,7 @@ function promptExit() {
 .finance-history {
   font-size: 20px;
   font-weight: 500;
+  color: rgb(64, 64, 64);
 }
 .values-container {
   display: flex;

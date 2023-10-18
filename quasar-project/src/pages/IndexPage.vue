@@ -1,36 +1,43 @@
 <template>
   <q-page padding style="background-color: #f7f7f8">
     <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
+      <q-card
+        :class="$q.screen.lt.sm ? 'add-dialog--sm' : 'add-dialog--default'"
+      >
         <q-form @submit="onSubmit">
           <q-card-section>
             <h3 class="add-dialog--title">
               Adicionar
               {{ promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída' }}
             </h3>
+
             <q-select
               flat
-              v-model="promptValues.categoria"
+              v-model.number="promptValues.categoria_id"
               :options="categoriesStore.options"
               label="Categoria"
+              emit-value
+              map-options
               autofocus
               lazy-rules
               :rules="[
-                (val: string) =>
-                  (val && val.length > 0) ||
+                (val: number) =>
+                  (val && val !== 0) ||
                   'Por favor, selecione uma categoria',
               ]"
             />
 
             <q-select
-              v-model="promptValues.cliente"
+              v-model.number="promptValues.cliente_id"
               :options="clientsStore.options"
               label="Cliente"
+              emit-value
+              map-options
               autofocus
               lazy-rules
               :rules="[
-                (val: string) =>
-                  (val && val.length > 0) || 'Por favor, selecione um cliente',
+                (val: number) =>
+                  (val && val !== 0) || 'Por favor, selecione um cliente',
               ]"
             />
 
@@ -79,6 +86,7 @@
       @update:model-value="manager.findRecords(inputFilter)"
       label="Pesquisar por Nome do Cliente"
       style="margin-bottom: 20px"
+      class="q-px-sm"
     />
 
     <q-table
@@ -123,6 +131,7 @@
           </q-list>
         </q-btn-dropdown>
       </template>
+
       <template v-slot:body="props">
         <q-tr :props="props" class="cursor-pointer">
           <q-popup-edit
@@ -146,14 +155,15 @@
                 @click.stop.prevent="scope.cancel"
               />
             </div>
-
             <q-select
               label="Categoria"
-              v-model="scope.value.categoria"
+              v-model="scope.value.categoria_id"
               :options="categoriesStore.options"
+              emit-value
+              map-options
               :rules="[
-                (val: string) =>
-                  (val && val.length > 0) ||
+                (val: number) =>
+                  (val && val !== 0) ||
                   'Por favor, selecione uma categoria',
               ]"
               dense
@@ -161,11 +171,13 @@
             />
             <q-select
               label="Cliente"
-              v-model="scope.value.cliente"
+              v-model="scope.value.cliente_id"
               :options="clientsStore.options"
+              emit-value
+              map-options
               :rules="[
-                (val: string) =>
-                  (val && val.length > 0) ||
+                (val: number) =>
+                  (val && val !== 0) ||
                   'Por favor, selecione um cliente',
               ]"
               dense
@@ -239,25 +251,18 @@ import { useCategories } from 'src/stores/categories';
 import { useClients } from 'src/stores/clients';
 import { onMounted, ref, reactive } from 'vue';
 import { QTableColumn } from 'quasar';
+import { Record } from 'stores/manager';
 
 onMounted(() => {
   manager.init();
 });
 
-export interface PromptValues {
-  id?: number;
-  tipo: string | undefined;
-  categoria: string | undefined;
-  cliente: string | undefined;
-  valor: number | undefined;
-}
-
 const addValueButton = ref<boolean | undefined>(false);
 const prompt = ref<boolean | undefined>(false);
-const promptValues = reactive<PromptValues>({
+const promptValues = reactive<Record>({
   tipo: undefined,
-  categoria: undefined,
-  cliente: undefined,
+  categoria_id: undefined,
+  cliente_id: undefined,
   valor: undefined,
 });
 
@@ -308,10 +313,10 @@ async function onSubmit() {
     if (promptValues.tipo === 'saida' && promptValues.valor !== undefined) {
       promptValues.valor = promptValues.valor * -1;
     }
-    await manager.addRecord(promptValues as PromptValues);
+    await manager.addRecord(promptValues);
     promptValues.tipo = undefined;
-    promptValues.categoria = undefined;
-    promptValues.cliente = undefined;
+    promptValues.categoria_id = undefined;
+    promptValues.cliente_id = undefined;
     promptValues.valor = undefined;
   } catch (err) {
     alert('Algo deu errado! Não foi possível adicionar o valor.');
@@ -332,6 +337,12 @@ function promptExit() {
 
 <style lang="scss" scoped>
 .add-dialog {
+  &--sm {
+    min-width: 260px;
+  }
+  &--default {
+    min-width: 350px;
+  }
   &--title {
     margin: 0;
     text-align: center;
@@ -354,6 +365,7 @@ function promptExit() {
   }
 }
 .finance-history {
+  text-align: center;
   font-size: 20px;
   font-weight: 500;
   color: rgb(64, 64, 64);

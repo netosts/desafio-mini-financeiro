@@ -4,21 +4,19 @@ import { postRecord } from 'src/services/api/post';
 import { useCategories } from './categories';
 import { useClients } from './clients';
 import {
-  createRecordForm,
   createRows,
   filterByCategory,
   filterByName,
   sumTotal,
   sumTypes,
 } from 'src/services/manager/helpers';
-import { PromptValues } from 'src/pages/IndexPage.vue';
 import { putRecord } from 'src/services/api/put';
 import { delRecord } from 'src/services/api/delete';
 
 export interface Record {
   id?: number;
-  categoria_id: number | null;
-  cliente_id: number | null;
+  categoria_id: number | undefined | null;
+  cliente_id: number | undefined | null;
   tipo: string | undefined;
   valor: number | undefined;
 }
@@ -59,17 +57,25 @@ export const useManager = defineStore({
       categoriesStore.categories = await getCategorias();
       clientsStore.clients = await getClientes();
     },
-    async addRecord(promptValues: PromptValues) {
-      const form = createRecordForm(promptValues);
-      const response = await postRecord(form);
+    async addRecord(promptValues: Record) {
+      const response = await postRecord(promptValues);
       this.records.push(response);
     },
-    async updateRecord(newRecord: PromptValues) {
-      newRecord.tipo = newRecord.tipo === 'Entrada' ? 'entrada' : 'saida';
-      const form = createRecordForm(newRecord);
+    async updateRecord(promptValues: Record) {
+      promptValues.tipo = promptValues.tipo === 'Entrada' ? 'entrada' : 'saida';
+      const form = {
+        id: promptValues.id,
+        categoria_id: promptValues.categoria_id,
+        cliente_id: promptValues.cliente_id,
+        tipo: promptValues.tipo,
+        valor: promptValues.valor,
+      };
       const response = await putRecord(form);
-      if (newRecord.id) {
-        this.records[newRecord.id - 1] = response;
+      if (promptValues.id) {
+        const index = this.records.findIndex(
+          (item) => item.id === promptValues.id
+        );
+        this.records[index] = response;
       }
     },
     async deleteRecord(record_id: number) {

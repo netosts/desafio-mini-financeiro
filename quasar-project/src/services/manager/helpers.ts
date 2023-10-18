@@ -13,12 +13,27 @@ export function createRecordForm(promptValues: PromptValues): Record {
   const cliente = clientsStore.clients.find(
     (item) => item.cliente === promptValues.cliente
   );
-  return {
-    categoria_id: categoria ? categoria.id : null,
-    cliente_id: cliente ? cliente.id : null,
-    tipo: promptValues.tipo,
-    valor: promptValues.valor,
-  };
+
+  let form;
+
+  if (promptValues.id) {
+    form = {
+      id: promptValues.id,
+      categoria_id: categoria ? categoria.id : null,
+      cliente_id: cliente ? cliente.id : null,
+      tipo: promptValues.tipo,
+      valor: promptValues.valor,
+    };
+  } else {
+    form = {
+      categoria_id: categoria ? categoria.id : null,
+      cliente_id: cliente ? cliente.id : null,
+      tipo: promptValues.tipo,
+      valor: promptValues.valor,
+    };
+  }
+
+  return form;
 }
 
 export function createRows(records: Record[]): IndexRows[] {
@@ -36,10 +51,11 @@ export function createRows(records: Record[]): IndexRows[] {
       }
     }
     return {
+      id: record.id,
       categoria: translatedCategory ? translatedCategory.label : null,
       cliente: translatedClient ? translatedClient.cliente : null,
-      tipo: record.tipo ? record.tipo : null,
-      valor: record.valor ? `R$${record.valor.toFixed(2)}` : null,
+      tipo: record.tipo === 'entrada' ? 'Entrada' : 'Saída',
+      valor: record.valor ? record.valor : null,
     };
   });
   return transformedRows;

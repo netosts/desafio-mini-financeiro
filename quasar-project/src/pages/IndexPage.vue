@@ -35,7 +35,9 @@
           </q-card-section>
 
           <q-card-section>
-            <div class="text-h6">{{ promptValues.tipo }}</div>
+            <div class="text-h6">
+              {{ promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída' }}
+            </div>
             <q-input
               dense
               type="number"
@@ -51,11 +53,7 @@
 
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Cancelar" type="button" v-close-popup />
-            <q-btn
-              flat
-              :label="`Adicionar ${promptValues.tipo}`"
-              type="submit"
-            />
+            <q-btn flat label="Salvar" type="submit" />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -88,11 +86,13 @@
     />
 
     <q-table
-      style="height: 400px; padding: 5px"
+      style="height: 400px"
+      flat
+      bordered
       title="Entradas e Saídas"
       :rows="manager.rows"
       :columns="columns"
-      row-key="index"
+      row-key="name"
       virtual-scroll
       v-model:pagination="pagination"
       :rows-per-page-options="[0]"
@@ -102,7 +102,7 @@
 
         <q-space />
 
-        <q-btn-dropdown outline color="primary" label="Filtro">
+        <q-btn-dropdown color="primary" label="Filtro">
           <q-list>
             <q-item
               clickable
@@ -126,6 +126,85 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props" class="cursor-pointer">
+          <q-popup-edit
+            :cover="false"
+            anchor="center middle"
+            v-model="props.row"
+            @save="manager.updateRecord"
+            buttons
+            label-set="Salvar"
+            label-cancel="Cancelar"
+            v-slot="scope"
+          >
+            <div class="popup-title">
+              <span>Atualizar Registro</span>
+              <q-btn
+                color="red"
+                text-color="white"
+                label="Deletar"
+                class="q-ma-md"
+                @click="manager.deleteRecord(props.row.id)"
+                @click.stop.prevent="scope.cancel"
+              />
+            </div>
+
+            <q-select
+              label="Categoria"
+              v-model="scope.value.categoria"
+              :options="categoriesStore.options"
+              :rules="[
+                (val: string) =>
+                  (val && val.length > 0) ||
+                  'Por favor, selecione uma categoria',
+              ]"
+              dense
+              autofocus
+            />
+            <q-select
+              label="Cliente"
+              v-model="scope.value.cliente"
+              :options="clientsStore.options"
+              :rules="[
+                (val: string) =>
+                  (val && val.length > 0) ||
+                  'Por favor, selecione um cliente',
+              ]"
+              dense
+              autofocus
+            />
+            <q-select
+              label="Tipo"
+              v-model="scope.value.tipo"
+              :options="managerTypesList"
+              :rules="[
+                (val: string) =>
+                  (val && val.length > 0) ||
+                  'Por favor, selecione um tipo',
+              ]"
+              dense
+              autofocus
+            />
+            <q-input
+              type="number"
+              label="Valor"
+              v-model.number="scope.value.valor"
+              :rules="[
+                (val:number) => (val && val > 0) || 'Por favor, informe um valor',
+              ]"
+              dense
+              autofocus
+            />
+          </q-popup-edit>
+          <q-td key="categoria" :props="props">{{ props.row.categoria }}</q-td>
+          <q-td key="cliente" :props="props">{{ props.row.cliente }}</q-td>
+          <q-td key="tipo" :props="props">{{ props.row.tipo }}</q-td>
+          <q-td key="valor" :props="props">
+            R${{ props.row.valor.toFixed(2) }}
+          </q-td>
+        </q-tr>
       </template>
     </q-table>
 
@@ -163,12 +242,14 @@ import { useManager } from 'src/stores/manager';
 import { useCategories } from 'src/stores/categories';
 import { useClients } from 'src/stores/clients';
 import { onMounted, ref, reactive } from 'vue';
+import { QTableColumn } from 'quasar';
 
 onMounted(() => {
   manager.init();
 });
 
 export interface PromptValues {
+  id?: number;
   tipo: string | undefined;
   categoria: string | undefined;
   cliente: string | undefined;
@@ -192,7 +273,7 @@ const clientsStore = useClients();
 
 const pagination = ref({ rowsPerPage: 0 });
 
-const columns = [
+const columns: QTableColumn[] = [
   {
     name: 'categoria',
     label: 'Categoria',
@@ -223,6 +304,8 @@ const columns = [
   },
 ];
 
+const managerTypesList = ['Entrada', 'Saída'];
+
 async function onSubmit() {
   try {
     prompt.value = false;
@@ -252,6 +335,17 @@ function promptExit() {
 </script>
 
 <style lang="scss" scoped>
+.popup-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  span {
+    font-size: 18px;
+    font-weight: 500;
+    color: rgb(64, 64, 64);
+  }
+}
 .finance-history {
   font-size: 20px;
   font-weight: 500;

@@ -12,8 +12,11 @@ import {
   sumTypes,
 } from 'src/services/manager/helpers';
 import { PromptValues } from 'src/pages/IndexPage.vue';
+import { putRecord } from 'src/services/api/put';
+import { delRecord } from 'src/services/api/delete';
 
 export interface Record {
+  id?: number;
   categoria_id: number | null;
   cliente_id: number | null;
   tipo: string | undefined;
@@ -24,7 +27,7 @@ export interface IndexRows {
   categoria: string | null;
   cliente: string | null;
   tipo: string | null;
-  valor: string | null;
+  valor: number | undefined | null;
 }
 
 const categoriesStore = useCategories();
@@ -60,6 +63,21 @@ export const useManager = defineStore({
       const form = createRecordForm(promptValues);
       const response = await postRecord(form);
       this.records.push(response);
+    },
+    async updateRecord(newRecord: PromptValues) {
+      newRecord.tipo = newRecord.tipo === 'Entrada' ? 'entrada' : 'saida';
+      const form = createRecordForm(newRecord);
+      const response = await putRecord(form);
+      if (newRecord.id) {
+        this.records[newRecord.id - 1] = response;
+      }
+    },
+    async deleteRecord(record_id: number) {
+      const response = await delRecord(record_id);
+      if (response) {
+        const index = this.records.findIndex((item) => item.id === record_id);
+        this.records.splice(index, 1);
+      }
     },
     async filterRecords(filter: string | number) {
       if (this.defaultRecords.length === 0) {

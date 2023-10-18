@@ -25,25 +25,39 @@
   ],
   "valores": [
     {
+      "id": 9,
       "categoria_id": 1,
       "cliente_id": 1,
       "tipo": "entrada",
-      "valor": 42,
-      "id": 9
+      "valor": 789.23
     },
     {
+      "id": 10,
       "categoria_id": 2,
       "cliente_id": 2,
       "tipo": "saida",
-      "valor": -3654.75,
-      "id": 10
+      "valor": 365.75
     },
     {
+      "id": 11,
       "categoria_id": 1,
       "cliente_id": 1,
       "tipo": "entrada",
-      "valor": 7534.567,
-      "id": 11
+      "valor": 753.567
+    },
+    {
+      "id": 13,
+      "categoria_id": 2,
+      "cliente_id": 2,
+      "tipo": "saida",
+      "valor": 130
+    },
+    {
+      "id": 14,
+      "categoria_id": 2,
+      "cliente_id": 1,
+      "tipo": "saida",
+      "valor": 99.99
     }
   ]
 }

@@ -5,6 +5,11 @@ interface Categories {
   label: string;
 }
 
+interface CategoriesOptions {
+  label: string;
+  value: number;
+}
+
 export const useCategories = defineStore({
   id: 'categories',
   state: () => ({
@@ -12,8 +17,10 @@ export const useCategories = defineStore({
     categoryFilter: 'All' as string | number,
   }),
   getters: {
-    options(): string[] {
-      return this.categories.map((item) => item.label);
+    options(): CategoriesOptions[] {
+      return this.categories.map((item) => {
+        return { label: item.label, value: item.id };
+      });
     },
   },
   actions: {},

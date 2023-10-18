@@ -1,40 +1,9 @@
 import { useCategories } from 'src/stores/categories';
 import { useClients } from 'src/stores/clients';
 import { Record, IndexRows } from 'src/stores/manager';
-import { PromptValues } from 'src/pages/IndexPage.vue';
 
 const categoriesStore = useCategories();
 const clientsStore = useClients();
-
-export function createRecordForm(promptValues: PromptValues): Record {
-  const categoria = categoriesStore.categories.find(
-    (item) => item.label === promptValues.categoria
-  );
-  const cliente = clientsStore.clients.find(
-    (item) => item.cliente === promptValues.cliente
-  );
-
-  let form;
-
-  if (promptValues.id) {
-    form = {
-      id: promptValues.id,
-      categoria_id: categoria ? categoria.id : null,
-      cliente_id: cliente ? cliente.id : null,
-      tipo: promptValues.tipo,
-      valor: promptValues.valor,
-    };
-  } else {
-    form = {
-      categoria_id: categoria ? categoria.id : null,
-      cliente_id: cliente ? cliente.id : null,
-      tipo: promptValues.tipo,
-      valor: promptValues.valor,
-    };
-  }
-
-  return form;
-}
 
 export function createRows(records: Record[]): IndexRows[] {
   const transformedRows = records.map((record) => {
@@ -52,6 +21,8 @@ export function createRows(records: Record[]): IndexRows[] {
     }
     return {
       id: record.id,
+      categoria_id: record.categoria_id,
+      cliente_id: record.cliente_id,
       categoria: translatedCategory ? translatedCategory.label : null,
       cliente: translatedClient ? translatedClient.cliente : null,
       tipo: record.tipo === 'entrada' ? 'Entrada' : 'Saída',

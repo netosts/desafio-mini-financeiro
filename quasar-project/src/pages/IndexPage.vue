@@ -246,12 +246,21 @@
 </template>
 
 <script setup lang="ts">
+import { useMeta } from 'quasar';
 import { useManager } from 'src/stores/manager';
 import { useCategories } from 'src/stores/categories';
 import { useClients } from 'src/stores/clients';
 import { onMounted, ref, reactive } from 'vue';
 import { QTableColumn } from 'quasar';
 import { Record } from 'stores/manager';
+
+const pageTitle = ref('Desafio Mini Financeiro');
+
+useMeta(() => {
+  return {
+    title: pageTitle.value,
+  };
+});
 
 onMounted(() => {
   manager.init();

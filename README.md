@@ -1,6 +1,32 @@
 # Desafio Mini Financeiro: Desenvolvimento de um Aplicativo PWA
 
-Seu desafio consiste em criar um Progressive Web App (PWA) utilizando Vue 3, Pinia, Axios e Quasar para gerenciar registros de entradas e saídas financeiras. O objetivo é desenvolver uma aplicação que ofereça funcionalidades de registro, categorização e pesquisa, com destaque para o cálculo do saldo total.
+<!-- tocstop -->
+
+## Teste a aplicação
+
+Faça o clone do repositório git
+
+```
+git clone https://github.com/netosts/desafio-mini-financeiro.git
+```
+
+Acesse a pasta do repositório
+
+```
+cd desafio-mini-financeiro
+```
+
+Rode o docker-compose da aplicação (necessário ter o Docker instalado e funcionando)
+
+```
+docker-compose up -d
+```
+
+Pronto, agora é só acessar [http://localhost:8080](http://localhost:8080)
+
+## Sobre o Desafio
+
+O desafio consiste em criar um Progressive Web App (PWA) utilizando Vue 3, Pinia, Axios e Quasar para gerenciar registros de entradas e saídas financeiras. O objetivo é desenvolver uma aplicação que ofereça funcionalidades de registro, categorização e pesquisa, com destaque para o cálculo do saldo total.
 
 ## Principais Características
 

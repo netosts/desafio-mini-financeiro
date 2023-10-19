@@ -56,7 +56,7 @@
 
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Cancelar" type="button" v-close-popup />
-            <q-btn flat label="Salvar" type="submit" />
+            <q-btn flat label="Adicionar" type="submit" />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -106,7 +106,7 @@
 
         <q-space />
 
-        <q-btn-dropdown color="primary" label="Filtro">
+        <q-btn-dropdown flat color="primary" label="Filtro">
           <q-list>
             <q-item
               clickable
@@ -133,99 +133,127 @@
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props" class="cursor-pointer">
-          <q-popup-edit
-            :cover="$q.screen.lt.sm ? true : false"
-            anchor="center middle"
-            v-model="props.row"
-            @save="manager.updateRecord"
-            buttons
-            label-set="Salvar"
-            label-cancel="Cancelar"
-            v-slot="scope"
-          >
-            <div class="popup-title">
-              <span>Atualizar Registro</span>
-              <q-btn
-                color="red"
-                text-color="white"
-                label="Deletar"
-                class="q-ma-md"
-                @click="manager.deleteRecord(props.row.id)"
-                @click.stop.prevent="scope.cancel"
-              />
-            </div>
-            <q-select
-              label="Categoria"
-              v-model="scope.value.categoria_id"
-              :options="categoriesStore.options"
-              emit-value
-              map-options
-              :rules="[
-                (val: number) =>
-                  (val && val !== 0) ||
-                  'Por favor, selecione uma categoria',
-              ]"
-              dense
-              autofocus
-            />
-            <q-select
-              label="Cliente"
-              v-model="scope.value.cliente_id"
-              :options="clientsStore.options"
-              emit-value
-              map-options
-              :rules="[
-                (val: number) =>
-                  (val && val !== 0) ||
-                  'Por favor, selecione um cliente',
-              ]"
-              dense
-              autofocus
-            />
-            <q-select
-              label="Tipo"
-              v-model="scope.value.tipo"
-              :options="managerTypesList"
-              :rules="[
-                (val: string) =>
-                  (val && val.length > 0) ||
-                  'Por favor, selecione um tipo',
-              ]"
-              dense
-              autofocus
-            />
-            <q-input
-              type="number"
-              label="Valor"
-              v-model.number="scope.value.valor"
-              :rules="[
-                (val:number) => (val && val > 0) || 'Por favor, informe um valor',
-              ]"
-              dense
-              autofocus
-            />
-          </q-popup-edit>
+        <q-tr :props="props">
+          <q-td key="id" :props="props">{{ props.row.id }}</q-td>
           <q-td key="categoria" :props="props">{{ props.row.categoria }}</q-td>
           <q-td key="cliente" :props="props">{{ props.row.cliente }}</q-td>
           <q-td key="tipo" :props="props">{{ props.row.tipo }}</q-td>
           <q-td key="valor" :props="props">
             R${{ props.row.valor.toFixed(2) }}
           </q-td>
+          <q-td>
+            <q-btn round size="sm" icon="update" />
+            <q-popup-edit
+              :cover="$q.screen.lt.sm ? true : false"
+              anchor="center start"
+              v-model="props.row"
+              @save="manager.updateRecord"
+              buttons
+              label-set="Salvar"
+              label-cancel="Cancelar"
+              v-slot="scope"
+            >
+              <div class="popup-title">
+                <span>Atualizar Registro</span>
+              </div>
+              <q-select
+                label="Categoria"
+                v-model="scope.value.categoria_id"
+                :options="categoriesStore.options"
+                emit-value
+                map-options
+                :rules="[
+                (val: number) =>
+                  (val && val !== 0) ||
+                  'Por favor, selecione uma categoria',
+              ]"
+                dense
+                autofocus
+              />
+              <q-select
+                label="Cliente"
+                v-model="scope.value.cliente_id"
+                :options="clientsStore.options"
+                emit-value
+                map-options
+                :rules="[
+                (val: number) =>
+                  (val && val !== 0) ||
+                  'Por favor, selecione um cliente',
+              ]"
+                dense
+                autofocus
+              />
+              <q-select
+                label="Tipo"
+                v-model="scope.value.tipo"
+                :options="managerTypesList"
+                :rules="[
+                (val: string) =>
+                  (val && val.length > 0) ||
+                  'Por favor, selecione um tipo',
+              ]"
+                dense
+                autofocus
+              />
+              <q-input
+                type="number"
+                label="Valor"
+                v-model.number="scope.value.valor"
+                :rules="[
+                (val:number) => (val && val > 0) || 'Por favor, informe um valor',
+              ]"
+                dense
+                autofocus
+              />
+            </q-popup-edit>
+          </q-td>
+          <q-td>
+            <q-btn round size="sm" icon="delete" />
+            <q-popup-edit
+              :cover="$q.screen.lt.sm ? true : false"
+              anchor="center start"
+              style="width: 250px"
+              v-slot="scope"
+            >
+              <div class="popup-title">
+                <span
+                  >Tem certeza que deseja deletar o registro
+                  {{ props.row.id }}?</span
+                >
+              </div>
+              <div class="popup-buttons">
+                <q-btn
+                  color="grey-3"
+                  text-color="black"
+                  label="Cancelar"
+                  @click.stop.prevent="scope.cancel"
+                />
+                <q-btn
+                  color="red"
+                  text-color="white"
+                  label="Deletar"
+                  @click="manager.deleteRecord(props.row.id)"
+                  @click.stop.prevent="scope.cancel"
+                />
+              </div>
+            </q-popup-edit>
+          </q-td>
         </q-tr>
       </template>
     </q-table>
 
     <div
-      class="flex justify-end"
-      style="padding-bottom: 20px; padding-top: 20px"
+      class="q-pa-lg"
+      :class="{
+        'flex justify-end': !$q.screen.lt.sm,
+        'fixed-bottom-right': $q.screen.lt.sm,
+      }"
     >
       <q-fab
         v-model="addValueButton"
-        label="Adicionar"
-        label-position="right"
         color="primary"
-        icon="keyboard_arrow_left"
+        icon="add"
         :direction="$q.screen.lt.sm ? 'up' : 'left'"
       >
         <q-fab-action
@@ -285,6 +313,13 @@ const pagination = ref({ rowsPerPage: 0 });
 
 const columns: QTableColumn[] = [
   {
+    name: 'id',
+    label: 'Id',
+    field: 'id',
+    sortable: true,
+    align: 'left',
+  },
+  {
     name: 'categoria',
     label: 'Categoria',
     field: 'categoria',
@@ -309,6 +344,20 @@ const columns: QTableColumn[] = [
     name: 'valor',
     label: 'Valor',
     field: 'valor',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'update',
+    label: 'Editar',
+    field: 'update',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'delete',
+    label: 'Deletar',
+    field: 'delete',
     sortable: true,
     align: 'left',
   },
@@ -345,6 +394,7 @@ function promptExit() {
 </script>
 
 <style lang="scss" scoped>
+$text-title: rgb(65, 65, 65);
 .add-dialog {
   &--sm {
     min-width: 260px;
@@ -357,7 +407,7 @@ function promptExit() {
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    color: rgb(64, 64, 64);
+    color: $text-title;
   }
 }
 .popup-title {
@@ -367,17 +417,24 @@ function promptExit() {
   flex-wrap: wrap;
   gap: 10px;
   span {
+    padding: 10px;
     text-align: center;
     font-size: 18px;
     font-weight: 500;
-    color: rgb(64, 64, 64);
+    color: $text-title;
   }
+}
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px;
 }
 .finance-history {
   text-align: center;
   font-size: 20px;
   font-weight: 500;
-  color: rgb(64, 64, 64);
+  color: $text-title;
 }
 .values-container {
   display: flex;

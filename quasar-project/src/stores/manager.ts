@@ -86,9 +86,7 @@ export const useManager = defineStore({
       }
     },
     async filterRecords(filter: string | number) {
-      if (this.defaultRecords.length === 0) {
-        this.defaultRecords = await getValores();
-      }
+      this.defaultRecords = await getValores();
       const filteredRecords = await filterByCategory(
         filter,
         this.defaultRecords
@@ -96,9 +94,7 @@ export const useManager = defineStore({
       this.records = filteredRecords;
     },
     async findRecords(filter: string) {
-      if (this.defaultRecords.length === 0) {
-        this.defaultRecords = await getValores();
-      }
+      this.defaultRecords = await getValores();
       const filteredRecords = await filterByName(filter, this.defaultRecords);
       this.records = filteredRecords;
     },

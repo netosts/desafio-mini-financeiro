@@ -44,6 +44,20 @@
       "cliente_id": 2,
       "tipo": "saida",
       "valor": 130
+    },
+    {
+      "tipo": "entrada",
+      "categoria_id": 1,
+      "cliente_id": 1,
+      "valor": 350,
+      "id": 14
+    },
+    {
+      "tipo": "saida",
+      "categoria_id": 3,
+      "cliente_id": 2,
+      "valor": 99.87,
+      "id": 15
     }
   ]
 }

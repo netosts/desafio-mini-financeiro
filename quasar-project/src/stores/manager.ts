@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia';
-import { getValores, getCategorias, getClientes } from 'src/services/api/get';
-import { postRecord } from 'src/services/api/post';
 import { useCategories } from './categories';
 import { useClients } from './clients';
 import {
@@ -10,23 +8,15 @@ import {
   sumTotal,
   sumTypes,
 } from 'src/services/manager/helpers';
-import { putRecord } from 'src/services/api/put';
-import { delRecord } from 'src/services/api/delete';
-
-export interface Record {
-  id?: number;
-  categoria_id: number | undefined | null;
-  cliente_id: number | undefined | null;
-  tipo: string | undefined;
-  valor: number | undefined;
-}
-
-export interface IndexRows {
-  categoria: string | null;
-  cliente: string | null;
-  tipo: string | null;
-  valor: number | undefined | null;
-}
+import { IndexRows, Record } from 'src/types/manager';
+import {
+  delRecord,
+  getCategorias,
+  getClientes,
+  getValores,
+  postRecord,
+  putRecord,
+} from 'src/services/api/manager';
 
 const categoriesStore = useCategories();
 const clientsStore = useClients();

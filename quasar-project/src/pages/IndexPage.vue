@@ -1,66 +1,10 @@
 <template>
   <q-page padding style="background-color: #f7f7f8">
-    <q-dialog v-model="prompt" persistent>
-      <q-card
-        :class="$q.screen.lt.sm ? 'add-dialog--sm' : 'add-dialog--default'"
-      >
-        <q-form @submit="onSubmit">
-          <q-card-section>
-            <h3 class="add-dialog--title">
-              Adicionar
-              {{ promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída' }}
-            </h3>
-
-            <q-select
-              flat
-              v-model.number="promptValues.categoria_id"
-              :options="categoriesStore.options"
-              label="Categoria"
-              emit-value
-              map-options
-              autofocus
-              lazy-rules
-              :rules="[
-                (val: number) =>
-                  (val && val !== 0) ||
-                  'Por favor, selecione uma categoria',
-              ]"
-            />
-
-            <q-select
-              v-model.number="promptValues.cliente_id"
-              :options="clientsStore.options"
-              label="Cliente"
-              emit-value
-              map-options
-              autofocus
-              lazy-rules
-              :rules="[
-                (val: number) =>
-                  (val && val !== 0) || 'Por favor, selecione um cliente',
-              ]"
-            />
-
-            <q-input
-              type="number"
-              v-model.number="promptValues.valor"
-              :label="promptValues.tipo === 'entrada' ? 'Entrada' : 'Saída'"
-              autofocus
-              lazy-rules
-              step="any"
-              :rules="[
-                (val: number) => (val && val > 0) || 'Por favor, informe um valor',
-              ]"
-            />
-          </q-card-section>
-
-          <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancelar" type="button" v-close-popup />
-            <q-btn flat label="Adicionar" type="submit" />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog>
+    <DialogInput
+      :prompt="prompt"
+      :type="promptType"
+      @prompt="handleDialogInput"
+    />
 
     <div class="values-container">
       <div class="values-container__content">
@@ -211,6 +155,7 @@
           <q-td>
             <q-btn round size="sm" icon="delete" />
             <q-popup-edit
+              v-model="props.row"
               :cover="$q.screen.lt.sm ? true : false"
               anchor="center start"
               style="width: 250px"
@@ -278,9 +223,9 @@ import { useMeta } from 'quasar';
 import { useManager } from 'src/stores/manager';
 import { useCategories } from 'src/stores/categories';
 import { useClients } from 'src/stores/clients';
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref } from 'vue';
 import { QTableColumn } from 'quasar';
-import { Record } from 'stores/manager';
+import DialogInput from 'src/components/DialogInput.vue';
 
 const pageTitle = ref('Desafio Mini Financeiro');
 
@@ -294,14 +239,9 @@ onMounted(() => {
   manager.init();
 });
 
+const prompt = ref<boolean>(false);
+const promptType = ref<string>('');
 const addValueButton = ref<boolean | undefined>(false);
-const prompt = ref<boolean | undefined>(false);
-const promptValues = reactive<Record>({
-  tipo: undefined,
-  categoria_id: undefined,
-  cliente_id: undefined,
-  valor: undefined,
-});
 
 const inputFilter = ref('');
 
@@ -365,51 +305,24 @@ const columns: QTableColumn[] = [
 
 const managerTypesList = ['Entrada', 'Saída'];
 
-async function onSubmit() {
-  try {
-    prompt.value = false;
-    if (promptValues.tipo === 'saida' && promptValues.valor !== undefined) {
-      promptValues.valor = promptValues.valor * -1;
-    }
-    await manager.addRecord(promptValues);
-    promptValues.tipo = undefined;
-    promptValues.categoria_id = undefined;
-    promptValues.cliente_id = undefined;
-    promptValues.valor = undefined;
-  } catch (err) {
-    alert('Algo deu errado! Não foi possível adicionar o valor.');
-    console.error(err);
-  }
-}
-
 function promptEntry() {
-  promptValues.tipo = 'entrada';
+  promptType.value = 'entrada';
   prompt.value = true;
 }
 
 function promptExit() {
-  promptValues.tipo = 'saida';
+  promptType.value = 'saida';
   prompt.value = true;
+}
+
+function handleDialogInput(emittedValue: boolean) {
+  prompt.value = emittedValue;
 }
 </script>
 
 <style lang="scss" scoped>
 $text-title: rgb(65, 65, 65);
-.add-dialog {
-  &--sm {
-    min-width: 260px;
-  }
-  &--default {
-    min-width: 350px;
-  }
-  &--title {
-    margin: 0;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 600;
-    color: $text-title;
-  }
-}
+
 .popup-title {
   display: flex;
   align-items: center;

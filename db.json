@@ -2,15 +2,15 @@
   "categorias": [
     {
       "id": 1,
-      "label": "CASA"
+      "label": "Casa"
     },
     {
       "id": 2,
-      "label": "INTERNET"
+      "label": "Internet"
     },
     {
       "id": 3,
-      "label": "SERVIÇO"
+      "label": "Serviço"
     }
   ],
   "clientes": [

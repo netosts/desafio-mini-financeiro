@@ -31,15 +31,19 @@ O desafio consiste em criar um Progressive Web App (PWA) utilizando Vue 3, Pinia
 ## Principais Características
 
 ### Registro de Entrada e Saída
+
 Os usuários devem ser capazes de registrar transações financeiras, indicando se se tratam de entradas ou saídas de recursos.
 
 ### Saldo Total
+
 O aplicativo deve calcular e exibir o saldo total, considerando todas as transações registradas, proporcionando aos usuários uma visão rápida de sua situação financeira.
 
 ### Filtragem por Categorias
+
 Os registros devem ser categorizados para facilitar a organização e a análise. Os usuários devem ser capazes de filtrar as transações por categorias específicas, tornando mais fácil a identificação de padrões de gastos.
 
 ### Pesquisa por Nome do Cliente
+
 A aplicação deve permitir que os usuários pesquisem transações específicas com base no nome do cliente associado a cada transação. Isso simplificará a localização de informações relevantes.
 
 ## Tecnologias Utilizadas
@@ -62,12 +66,12 @@ Esta é uma oportunidade de demonstrar suas habilidades no desenvolvimento de ap
 json-server -w db.json
 {
   "categorias": [
-    { "id": 1, "label": "CASA" },
-    { "id": 2, "label": "INTERNET" },
-    { "id": 3, "label": "SERVIÇO" }
+    { "id": 1, "label": "Casa" },
+    { "id": 2, "label": "Internet" },
+    { "id": 3, "label": "Serviço" }
   ],
   "clientes": [
-    { "id": 1, "cliente": "JOSE" },
+    { "id": 1, "cliente": "Jose" },
     { "id": 2, "cliente": "Maria" }
   ]
 }
@@ -87,3 +91,4 @@ json-server -w db.json
     "valor": -5.0
   }
 ]
+```
